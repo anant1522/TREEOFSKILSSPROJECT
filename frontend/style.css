@@ -1,0 +1,268 @@
+
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to right, #6a11cb, #2575fc);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+  }
+  
+  .form-container {
+    width: 700px;
+    background: #ffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    animation: fadeIn 1s ease;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  h2 {
+    text-align: center;
+    color: #333;
+    font-size: 1.5em;
+    margin-bottom: 20px;
+    font-weight: bold;
+  }
+  
+  
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+  }
+  
+  .form-group select,
+  .form-group input[type="text"],
+  .form-group input[type="number"],
+  .form-group input[type="tel"],
+  .form-group textarea {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 15px;
+    transition: border 0.3s;
+  }
+  
+  .form-group select:focus,
+  .form-group input[type="text"]:focus,
+  .form-group input[type="number"]:focus,
+  .form-group input[type="tel"]:focus,
+  .form-group textarea:focus {
+    border-color: #2575fc;
+    outline: none;
+  }
+  
+  textarea {
+    resize: vertical;
+    min-height: 60px;
+  }
+  
+  
+  button {
+    padding: 12px;
+    background-color: #2575fc;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  
+  button:hover {
+    background-color: #0047ab;
+  }
+  
+  
+  .gender-group {
+    display: flex;
+    align-items: flex-start;
+  }
+  
+  .gender-group label {
+    margin-right: 10px;
+  }
+  
+  .gender-options {
+    display: flex;
+    gap: 10px;
+  }
+  
+  
+  .terms-group {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  
+  .otp-group, .otp-input-group {
+    display: flex;
+    flex-direction: column; 
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  
+  .otp-group input[type="tel"],
+  .otp-input-group input[type="text"] {
+    width: 80%;
+    padding: 12px;
+    font-size: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  
+  .otp-group button,
+  .otp-input-group button {
+    width: 60%; 
+    padding: 10px;
+    background-color: #2575fc;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+    text-align: center;
+  }
+  
+  .otp-group button:hover,
+  .otp-input-group button:hover {
+    background-color: #0047ab;
+  }
+  
+  
+  
+  input[type="checkbox"] {
+    width: 15px;
+    height: 15px;
+    cursor: pointer;
+  }
+  /* General styling */
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to right, #6a11cb, #2575fc);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+/* Form Container Styling */
+.form-container {
+    width: 700px;
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    animation: fadeIn 1s ease;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+h2 {
+    font-size: 1.5em;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+/* Form Group Styling */
+.form-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.form-group label {
+    font-size: 0.9em;
+    color: #555;
+    display: block;
+    margin-bottom: 5px;
+}
+
+/* Button and Options Styling */
+button {
+    padding: 8px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.3s;
+    margin-top: 8px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+/* Styling for Selected Button */
+button.selected {
+    background-color: #28a745;
+    border: 2px solid #1e7e34;
+    color: #fff;
+}
+
+.age-group-options, .course-options, .gender-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.age-group-options {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Two columns for age groups */
+    gap: 10px;
+}
+
+.gender-options input[type="radio"] {
+    margin-right: 5px;
+}
+
+.gender-options label {
+    font-size: 0.9em;
+}
+
+/* Course Details Styling */
+.course-details {
+    margin-top: 15px;
+    text-align: left;
+}
+
+.course-details h3 {
+    font-size: 1.2em;
+    color: #333;
+}
+
+.stage {
+    border-left: 3px solid #007bff;
+    padding-left: 10px;
+    margin-top: 10px;
+}
+
+.stage h5 {
+    font-size: 1em;
+    color: #333;
+}
+
+.stage p {
+    font-size: 0.85em;
+    color: #666;
+    margin: 3px 0;
+}
+

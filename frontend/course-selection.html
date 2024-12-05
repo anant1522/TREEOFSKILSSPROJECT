@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Course Selection</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: linear-gradient(135deg, #6a11cb, #2575fc); color: #333; margin: 0; padding: 0; }
+        .form-container { max-width: 800px; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); margin: 50px auto; }
+        .form-container h2 { margin-bottom: 20px; text-align: center; }
+        .button-group { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
+        .button-group button { padding: 10px 20px; font-size: 16px; border: 1px solid #ccc; border-radius: 5px; background-color: #f0f0f0; cursor: pointer; transition: background-color 0.3s, color 0.3s, transform 0.2s; }
+        .button-group button:hover { background-color: #6a11cb; color: white; transform: scale(1.05); }
+        .button-group button.active { background-color: #2575fc; color: white; font-weight: bold; border: 1px solid #2575fc; transform: scale(1.1); box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); }
+        .details { margin-top: 20px; }
+        .details h3 { margin-bottom: 10px; }
+        ul { padding-left: 20px; list-style-type: disc; }
+        li { margin-bottom: 5px; }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Course Selection</h2>
+
+        <!-- Age Group -->
+        <h3>Select Age Group</h3>
+        <div id="age-group" class="button-group"></div>
+
+        <!-- Recommended Subjects -->
+        <h3>Recommended Subjects</h3>
+        <div id="recommended-subjects" class="button-group"></div>
+
+        <!-- All Subjects -->
+        <h3>All Subjects</h3>
+        <div id="all-subjects" class="button-group"></div>
+
+        <!-- Available Courses -->
+        <h3>Available Courses</h3>
+        <div id="course-group" class="button-group" style="display: none;"></div>
+
+        <!-- Available Stages -->
+        <h3>Available Stages</h3>
+        <div id="stage-group" class="button-group" style="display: none;"></div>
+
+        <!-- Dynamic Details -->
+        <div class="details" id="details" style="display: none;">
+            <h3>Details for Selected Stage</h3>
+            <div id="content"></div>
+        </div>
+    </div>
+
+    <script>
+        async function fetchAPI(endpoint) {
+            const response = await fetch(endpoint);
+            return response.json();
+        }
+
+        async function loadAgeGroups() {
+            const ageGroups = await fetchAPI('/api/age-groups');
+            const container = document.getElementById('age-group');
+            container.innerHTML = ageGroups.map(age => `
+                <button onclick="selectAgeGroup('${age._id}')">${age.name}</button>
+            `).join('');
+        }
+
+        async function selectAgeGroup(ageGroupId) {
+            const subjects = await fetchAPI(`/api/subjects?ageGroupId=${ageGroupId}`);
+            const recommendedSubjectsContainer = document.getElementById('recommended-subjects');
+            recommendedSubjectsContainer.innerHTML = subjects.map(subject => `
+                <button onclick="selectSubject('${subject._id}')">${subject.name}</button>
+            `).join('');
+        }
+
+        async function selectSubject(subjectId) {
+            const courses = await fetchAPI(`/api/courses?subjectId=${subjectId}`);
+            const coursesContainer = document.getElementById('course-group');
+            coursesContainer.innerHTML = courses.map(course => `
+                <button onclick="selectCourse('${course._id}')">${course.name}</button>
+            `).join('');
+            coursesContainer.style.display = "flex";
+        }
+
+        async function selectCourse(courseId) {
+            const stages = await fetchAPI(`/api/stages?courseId=${courseId}`);
+            const stagesContainer = document.getElementById('stage-group');
+            stagesContainer.innerHTML = stages.map(stage => `
+                <button onclick="selectStage('${stage._id}')">${stage.name}</button>
+            `).join('');
+            stagesContainer.style.display = "flex";
+        }
+
+        async function selectStage(stageId) {
+            const details = await fetchAPI(`/api/stage-details?stageId=${stageId}`);
+            const detailsContainer = document.getElementById('details');
+            const contentContainer = document.getElementById('content');
+            detailsContainer.style.display = "block";
+            contentContainer.innerHTML = details.content;
+        }
+
+        loadAgeGroups();
+    </script>
+</body>
+</html>

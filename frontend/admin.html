@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 0; }
+        .container { max-width: 1000px; margin: 20px auto; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); }
+        h1, h2 { text-align: center; }
+        form { margin: 20px 0; }
+        form div { margin-bottom: 15px; }
+        label { display: block; font-weight: bold; margin-bottom: 5px; }
+        input, select, button { width: 100%; padding: 10px; font-size: 16px; border: 1px solid #ccc; border-radius: 5px; }
+        button { background: #6a11cb; color: white; cursor: pointer; }
+        button:hover { background: #2575fc; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        table th, table td { padding: 10px; text-align: left; border: 1px solid #ddd; }
+        table th { background: #6a11cb; color: white; }
+        table tr:nth-child(even) { background: #f9f9f9; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Admin Panel</h1>
+        <h2>Manage Age Groups</h2>
+
+        <!-- Add Age Group Form -->
+        <form id="add-age-group-form">
+            <div>
+                <label for="age-group-name">Age Group Name</label>
+                <input type="text" id="age-group-name" placeholder="Enter age group name" required>
+            </div>
+            <button type="submit">Add Age Group</button>
+        </form>
+
+        <!-- Age Groups Table -->
+        <h2>Existing Age Groups</h2>
+        <table id="age-group-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Dynamic rows will be inserted here -->
+            </tbody>
+        </table>
+
+        <h2>Manage Subjects</h2>
+        <!-- Add Subject Form -->
+        <form id="add-subject-form">
+            <div>
+                <label for="subject-name">Subject Name</label>
+                <input type="text" id="subject-name" placeholder="Enter subject name" required>
+            </div>
+            <div>
+                <label for="age-group-select">Age Group</label>
+                <select id="age-group-select" required>
+                    <option value="">Select Age Group</option>
+                    <!-- Age groups will be dynamically loaded here -->
+                </select>
+            </div>
+            <button type="submit">Add Subject</button>
+        </form>
+
+        <!-- Subjects Table -->
+        <h2>Existing Subjects</h2>
+        <table id="subject-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Age Group</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Dynamic rows will be inserted here -->
+            </tbody>
+        </table>
+
+        <!-- Add more sections for Courses, Stages, and Details similarly -->
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:5000/api';
+
+        // Fetch and Display Age Groups
+        async function loadAgeGroups() {
+            const response = await fetch(`${API_BASE}/age-groups`);
+            const ageGroups = await response.json();
+
+            const ageGroupTable = document.getElementById('age-group-table').querySelector('tbody');
+            const ageGroupSelect = document.getElementById('age-group-select');
+            ageGroupTable.innerHTML = '';
+            ageGroupSelect.innerHTML = '<option value="">Select Age Group</option>';
+
+            ageGroups.forEach(ageGroup => {
+                // Populate Table
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${ageGroup._id}</td>
+                    <td>${ageGroup.name}</td>
+                    <td><button onclick="deleteAgeGroup('${ageGroup._id}')">Delete</button></td>
+                `;
+                ageGroupTable.appendChild(row);
+
+                // Populate Dropdown
+                const option = document.createElement('option');
+                option.value = ageGroup._id;
+                option.textContent = ageGroup.name;
+                ageGroupSelect.appendChild(option);
+            });
+        }
+
+        // Fetch and Display Subjects
+        async function loadSubjects() {
+            const response = await fetch(`${API_BASE}/subjects`);
+            const subjects = await response.json();
+
+            const subjectTable = document.getElementById('subject-table').querySelector('tbody');
+            subjectTable.innerHTML = '';
+            subjects.forEach(subject => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${subject._id}</td>
+                    <td>${subject.name}</td>
+                    <td>${subject.ageGroupId}</td>
+                    <td><button onclick="deleteSubject('${subject._id}')">Delete</button></td>
+                `;
+                subjectTable.appendChild(row);
+            });
+        }
+
+        // Add Age Group
+        document.getElementById('add-age-group-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('age-group-name').value;
+
+            await fetch(`${API_BASE}/add-age-group`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name })
+            });
+
+            document.getElementById('age-group-name').value = '';
+            loadAgeGroups();
+        });
+
+        // Add Subject
+        document.getElementById('add-subject-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('subject-name').value;
+            const ageGroupId = document.getElementById('age-group-select').value;
+
+            await fetch(`${API_BASE}/add-subject`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, ageGroupId })
+            });
+
+            document.getElementById('subject-name').value = '';
+            document.getElementById('age-group-select').value = '';
+            loadSubjects();
+        });
+
+        // Delete Age Group
+        async function deleteAgeGroup(id) {
+            await fetch(`${API_BASE}/delete-age-group/${id}`, { method: 'DELETE' });
+            loadAgeGroups();
+        }
+
+        // Delete Subject
+        async function deleteSubject(id) {
+            await fetch(`${API_BASE}/delete-subject/${id}`, { method: 'DELETE' });
+            loadSubjects();
+        }
+
+        // Initialize
+        loadAgeGroups();
+        loadSubjects();
+    </script>
+</body>
+</html>
